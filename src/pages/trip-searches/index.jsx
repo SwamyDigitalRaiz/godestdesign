@@ -140,10 +140,16 @@ export function TripSearchesPage() {
 
   const filteredInquiries = useMemo(() => {
     return inquiries.filter((inq) => {
-      if (activeTab === 'all') return true;
-      return inq.status === activeTab;
+      if (!searchQuery.trim()) return true;
+      const q = searchQuery.toLowerCase();
+      return (
+        (inq.userName && inq.userName.toLowerCase().includes(q)) ||
+        (inq.userPhone && inq.userPhone.includes(q)) ||
+        (inq.pickupAddress && inq.pickupAddress.toLowerCase().includes(q)) ||
+        (inq.dropAddress && inq.dropAddress.toLowerCase().includes(q))
+      );
     });
-  }, [inquiries, activeTab]);
+  }, [inquiries, searchQuery]);
 
   const formatTimeAgo = (dateStr) => {
     if (!dateStr) return 'Just now';
@@ -270,25 +276,10 @@ export function TripSearchesPage() {
 
       {/* ── Filters & Search ── */}
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
-        <div className="flex items-center gap-1.5 p-1 bg-slate-100/80 rounded-xl border border-slate-200">
-          {[
-            { id: 'all', label: 'All Inquiries' },
-            { id: 'choosing_ride', label: 'Choosing Ride' },
-            { id: 'booked', label: 'Booked' },
-            { id: 'cancelled', label: 'Cancelled' },
-          ].map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all ${
-                activeTab === tab.id
-                  ? 'bg-white text-slate-900 shadow-sm font-semibold'
-                  : 'text-slate-600 hover:text-slate-900'
-              }`}
-            >
-              {tab.label}
-            </button>
-          ))}
+        <div className="flex items-center gap-2">
+          <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider bg-slate-100 px-3 py-1.5 rounded-lg border border-slate-200">
+            {filteredInquiries.length} Recent Inquiries
+          </span>
         </div>
 
         <div className="relative w-full sm:w-80">
@@ -311,24 +302,22 @@ export function TripSearchesPage() {
                 <th className="py-3 px-4">User</th>
                 <th className="py-3 px-4">Pickup Location</th>
                 <th className="py-3 px-4">Destination Searched</th>
-                <th className="py-3 px-4">Vehicle / Category</th>
-                <th className="py-3 px-4">Distance / Fare</th>
-                <th className="py-3 px-4">Status</th>
-                <th className="py-3 px-4">Time</th>
+                <th className="py-3 px-4">Distance</th>
+                <th className="py-3 px-4">Searched Time</th>
                 <th className="py-3 px-4 text-right">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
               {loading && inquiries.length === 0 ? (
                 <tr>
-                  <td colSpan={8} className="py-12 text-center text-slate-500">
+                  <td colSpan={6} className="py-12 text-center text-slate-500">
                     <RotateCw className="h-6 w-6 animate-spin mx-auto mb-2 text-slate-400" />
                     Loading real-time searches...
                   </td>
                 </tr>
               ) : filteredInquiries.length === 0 ? (
                 <tr>
-                  <td colSpan={8} className="py-12 text-center text-slate-500">
+                  <td colSpan={6} className="py-12 text-center text-slate-500">
                     <Compass className="h-8 w-8 mx-auto mb-2 text-slate-300" />
                     No destination searches found for this filter.
                   </td>
@@ -377,53 +366,11 @@ export function TripSearchesPage() {
                       </div>
                     </td>
 
-                    {/* Vehicle */}
-                    <td className="py-3.5 px-4 whitespace-nowrap">
-                      <div className="flex items-center gap-1.5">
-                        {inq.selectedVehicle?.toLowerCase().includes('scooty') ? (
-                          <Bike className="h-4 w-4 text-amber-500" />
-                        ) : inq.selectedVehicle?.toLowerCase().includes('bike') ? (
-                          <Bike className="h-4 w-4 text-blue-500" />
-                        ) : (
-                          <Car className="h-4 w-4 text-slate-600" />
-                        )}
-                        <span className="text-xs font-semibold text-slate-800">
-                          {inq.selectedVehicle || 'Deciding Ride'}
-                        </span>
-                      </div>
-                    </td>
-
-                    {/* Distance & Estimated Fare */}
-                    <td className="py-3.5 px-4 whitespace-nowrap text-xs text-slate-700">
-                      <div>
-                        <span className="font-semibold text-slate-900">
-                          {inq.distanceKm || 5.0} km
-                        </span>
-                      </div>
-                      {inq.estimatedFare ? (
-                        <div className="text-slate-500 text-[11px]">
-                          ₹{inq.estimatedFare}
-                        </div>
-                      ) : null}
-                    </td>
-
-                    {/* Status Badge */}
-                    <td className="py-3.5 px-4 whitespace-nowrap">
-                      {inq.status === 'choosing_ride' ? (
-                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-50 text-amber-700 border border-amber-200">
-                          <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-ping" />
-                          Choosing Ride
-                        </span>
-                      ) : inq.status === 'booked' ? (
-                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
-                          <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" />
-                          Booked {inq.bookingCustomId ? `(${inq.bookingCustomId})` : ''}
-                        </span>
-                      ) : (
-                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-600">
-                          {inq.status || 'Abandoned'}
-                        </span>
-                      )}
+                    {/* Distance */}
+                    <td className="py-3.5 px-4 whitespace-nowrap text-xs">
+                      <span className="font-semibold text-slate-900 text-sm">
+                        {inq.distanceKm || 5.0} km
+                      </span>
                     </td>
 
                     {/* Time */}
