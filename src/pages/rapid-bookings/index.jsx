@@ -631,6 +631,22 @@ function generateCurvedRoadSpline(p1, p2, steps = 24) {
   return points;
 }
 
+function resolveCoordFromAddress(address, fallback) {
+  if (!address) return fallback;
+  const lower = String(address).toLowerCase();
+  if (/airport|shamshabad|rgia|rajiv gandhi|hyd/i.test(lower)) return [17.2403, 78.4294];
+  if (/manjeera|jntu|kukatpally/i.test(lower)) return [17.4925, 78.3925];
+  if (/uppal/i.test(lower)) return [17.4018, 78.5602];
+  if (/cyber towers|hitec/i.test(lower)) return [17.4504, 78.3808];
+  if (/inorbit|mindspace/i.test(lower)) return [17.4345, 78.3860];
+  if (/stadium|basheerbagh|lbs/i.test(lower)) return [17.3970, 78.4735];
+  if (/nexus|forum/i.test(lower)) return [17.4852, 78.3900];
+  if (/secunderabad/i.test(lower)) return [17.4334, 78.5015];
+  if (/madhapur/i.test(lower)) return [17.4435, 78.3952];
+  if (/attapur|gudimalkapur/i.test(lower)) return [17.3687, 78.4385];
+  return fallback;
+}
+
 function LiveTrackingModal({ ride, onClose }) {
   const mapContainerRef = useRef(null);
   const mapInstanceRef = useRef(null);
@@ -644,8 +660,8 @@ function LiveTrackingModal({ ride, onClose }) {
     lastUpdated: 'Just now',
   });
 
-  const pCoords = normalizeLatLng(ride.pickupCoords) || [17.4483, 78.3826];
-  const dCoords = normalizeLatLng(ride.dropCoords) || [17.4435, 78.3582];
+  const pCoords = normalizeLatLng(ride.pickupCoords) || resolveCoordFromAddress(ride.pickup, [17.4925, 78.3925]);
+  const dCoords = normalizeLatLng(ride.dropCoords) || resolveCoordFromAddress(ride.drop, [17.2403, 78.4294]);
   const drvCoords = ride.driverCoords ? normalizeLatLng(ride.driverCoords) : null;
 
   useEffect(() => {
