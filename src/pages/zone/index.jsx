@@ -20,6 +20,9 @@ import {
   Layers,
   X,
   Globe2,
+  Coins,
+  Bike,
+  Car,
 } from 'lucide-react';
 
 export function ZoneListPage() {
@@ -40,8 +43,6 @@ export function ZoneListPage() {
   const previewMapInstanceRef = useRef(null);
 
   // Filter zones
-  const isZoneActive = (z) => z.status === true || z.status === 'active';
-
   const filteredZones = zones.filter((z) => {
     const matchSearch =
       (z.name || '').toLowerCase().includes(search.toLowerCase()) ||
@@ -50,8 +51,8 @@ export function ZoneListPage() {
 
     const matchStatus =
       statusFilter === 'all' ||
-      (statusFilter === 'active' && isZoneActive(z)) ||
-      (statusFilter === 'inactive' && !isZoneActive(z));
+      (statusFilter === 'active' && z.status) ||
+      (statusFilter === 'inactive' && !z.status);
 
     return matchSearch && matchStatus;
   });
@@ -258,6 +259,7 @@ export function ZoneListPage() {
                 <th className="py-3 px-4">City / Region</th>
                 <th className="py-3 px-4">Boundary Points</th>
                 <th className="py-3 px-4">Coverage Area</th>
+                <th className="py-3 px-4">Vehicle Rates</th>
                 <th className="py-3 px-4">Status</th>
                 <th className="py-3 px-4 text-right">Actions</th>
               </tr>
@@ -265,7 +267,7 @@ export function ZoneListPage() {
             <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
               {filteredZones.length === 0 ? (
                 <tr>
-                  <td colSpan="7" className="py-12 text-center text-slate-400">
+                  <td colSpan="8" className="py-12 text-center text-slate-400">
                     <MapPin className="h-8 w-8 mx-auto text-slate-300 dark:text-slate-600 mb-2" />
                     <p className="text-base font-medium text-slate-700 dark:text-slate-300">
                       No zones found
@@ -311,6 +313,23 @@ export function ZoneListPage() {
                     <td className="py-3 px-4 text-slate-700 dark:text-slate-300 font-medium">
                       {zone.areaSqKm ? `${zone.areaSqKm} km²` : '—'}
                     </td>
+                    <td className="py-3 px-4">
+                      {zone.vehiclePricings && zone.vehiclePricings.length > 0 ? (
+                        <div className="flex flex-col gap-1">
+                          <span className="text-xs font-semibold text-slate-800 dark:text-slate-200 flex items-center gap-1">
+                            <Coins className="h-3.5 w-3.5 text-amber-500" />
+                            {zone.vehiclePricings.filter((v) => v.isEnabled !== false).length} Vehicles
+                          </span>
+                          <span className="text-[10px] text-slate-400">
+                            Custom Zone Matrix
+                          </span>
+                        </div>
+                      ) : (
+                        <span className="text-xs text-slate-400 font-medium">
+                          Global Vehicle Rates
+                        </span>
+                      )}
+                    </td>
                      <td className="py-3 px-4">
                       <button
                         type="button"
@@ -325,17 +344,17 @@ export function ZoneListPage() {
                       >
                         <span
                           className={`h-2 w-2 rounded-full ${
-                            isZoneActive(zone) ? 'bg-emerald-500' : 'bg-slate-400'
+                            zone.status ? 'bg-emerald-500' : 'bg-slate-400'
                           }`}
                         />
                         <span
                           className={`text-xs font-semibold px-2 py-0.5 rounded-full ${
-                            isZoneActive(zone)
+                            zone.status
                               ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400'
                               : 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400'
                           }`}
                         >
-                          {isZoneActive(zone) ? 'Active' : 'Inactive'}
+                          {zone.status ? 'Active' : 'Inactive'}
                         </span>
                       </button>
                     </td>
@@ -411,6 +430,41 @@ export function ZoneListPage() {
                   Status: {previewZone.status ? 'Active' : 'Inactive'}
                 </span>
               </div>
+
+              {previewZone.vehiclePricings && previewZone.vehiclePricings.length > 0 && (
+                <div className="pt-2 border-t border-slate-100 dark:border-slate-800 space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-semibold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
+                      <Coins className="h-3.5 w-3.5 text-amber-500" />
+                      Zone Vehicle Rates
+                    </span>
+                    <Badge variant="outline" className="text-[10px] text-slate-500">
+                      {previewZone.vehiclePricings.filter((v) => v.isEnabled !== false).length} Active Vehicles
+                    </Badge>
+                  </div>
+
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 max-h-40 overflow-y-auto pr-1">
+                    {previewZone.vehiclePricings.map((vp) => (
+                      <div
+                        key={vp.vehicleId || vp.vehicleName}
+                        className={`p-2 rounded-lg border text-xs ${
+                          vp.isEnabled !== false
+                            ? 'bg-slate-50 dark:bg-slate-800/60 border-slate-200 dark:border-slate-700'
+                            : 'bg-slate-100/50 dark:bg-slate-900/30 border-slate-200/50 opacity-50'
+                        }`}
+                      >
+                        <p className="font-semibold text-slate-900 dark:text-white truncate">
+                          {vp.vehicleName}
+                        </p>
+                        <div className="mt-1 space-y-0.5 text-[11px] text-slate-600 dark:text-slate-400">
+                          <p>Base: ₹{vp.minKmPrice} ({vp.minKmDistance} km)</p>
+                          <p className="text-blue-600 dark:text-blue-400 font-medium">+₹{vp.afterKmPrice}/km</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
 
             <div className="p-4 bg-slate-50 dark:bg-slate-800/50 border-t border-slate-100 dark:border-slate-800 flex justify-end gap-2">
