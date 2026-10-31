@@ -146,7 +146,8 @@ export function TripSearchesPage() {
         (inq.userName && inq.userName.toLowerCase().includes(q)) ||
         (inq.userPhone && inq.userPhone.includes(q)) ||
         (inq.pickupAddress && inq.pickupAddress.toLowerCase().includes(q)) ||
-        (inq.dropAddress && inq.dropAddress.toLowerCase().includes(q))
+        (inq.dropAddress && inq.dropAddress.toLowerCase().includes(q)) ||
+        (inq.zone && inq.zone.toLowerCase().includes(q))
       );
     });
   }, [inquiries, searchQuery]);
@@ -302,6 +303,7 @@ export function TripSearchesPage() {
                 <th className="py-3 px-4">User</th>
                 <th className="py-3 px-4">Pickup Location</th>
                 <th className="py-3 px-4">Destination Searched</th>
+                <th className="py-3 px-4">Zone</th>
                 <th className="py-3 px-4">Distance</th>
                 <th className="py-3 px-4">Searched Time</th>
                 <th className="py-3 px-4 text-right">Actions</th>
@@ -310,14 +312,14 @@ export function TripSearchesPage() {
             <tbody className="divide-y divide-slate-100">
               {loading && inquiries.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="py-12 text-center text-slate-500">
+                  <td colSpan={7} className="py-12 text-center text-slate-500">
                     <RotateCw className="h-6 w-6 animate-spin mx-auto mb-2 text-slate-400" />
                     Loading real-time searches...
                   </td>
                 </tr>
               ) : filteredInquiries.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="py-12 text-center text-slate-500">
+                  <td colSpan={7} className="py-12 text-center text-slate-500">
                     <Compass className="h-8 w-8 mx-auto mb-2 text-slate-300" />
                     No destination searches found for this filter.
                   </td>
@@ -364,6 +366,14 @@ export function TripSearchesPage() {
                           {inq.dropAddress}
                         </span>
                       </div>
+                    </td>
+
+                    {/* Zone */}
+                    <td className="py-3.5 px-4 whitespace-nowrap text-xs">
+                      <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full font-medium bg-blue-50 text-blue-700 dark:bg-blue-950/40 dark:text-blue-300 border border-blue-200/80 dark:border-blue-800 text-[11px]">
+                        <Compass className="h-3 w-3 text-blue-500" />
+                        <span>{inq.zone || 'Surat Central'}</span>
+                      </span>
                     </td>
 
                     {/* Distance */}
