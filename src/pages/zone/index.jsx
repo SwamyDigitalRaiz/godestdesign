@@ -458,7 +458,13 @@ export function ZoneListPage() {
                         </p>
                         <div className="mt-1 space-y-0.5 text-[11px] text-slate-600 dark:text-slate-400">
                           <p>Base: ₹{vp.minKmPrice} ({vp.minKmDistance} km)</p>
-                          <p className="text-blue-600 dark:text-blue-400 font-medium">+₹{vp.afterKmPrice}/km</p>
+                          <p className="text-blue-600 dark:text-blue-400 font-medium">+₹{vp.afterKmPrice}/km • {vp.commissionRate}{vp.commissionType === 'FIX' ? '₹' : '%'}</p>
+                          {vp.biddingEnabled && (
+                            <p className="text-emerald-600 dark:text-emerald-400 font-medium">Bids: ₹{vp.minFare}–₹{vp.maxFare}</p>
+                          )}
+                          {vp.weatherBad && (
+                            <p className="text-blue-600 dark:text-blue-400 font-medium">Rain: {vp.weatherSurgeType === 'multiplier' ? `${vp.weatherSurgeValue}x` : `+₹${vp.weatherSurgeValue}`}</p>
+                          )}
                         </div>
                       </div>
                     ))}

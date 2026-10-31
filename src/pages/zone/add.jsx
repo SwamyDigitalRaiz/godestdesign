@@ -25,6 +25,13 @@ import {
   Car,
   Bike,
   CheckCircle2,
+  Clock,
+  Sliders,
+  CloudRain,
+  DollarSign,
+  ChevronDown,
+  ChevronUp,
+  Shield,
 } from 'lucide-react';
 
 const CITY_PRESETS = [
@@ -92,14 +99,22 @@ export function AddZonePage() {
               vehicleCustomId: v.customId || '',
               vehicleName: v.name,
               vehicleImage: v.image || '',
-              minKmDistance: matched.minKmDistance ?? v.minKmDistance ?? 0,
-              minKmPrice: matched.minKmPrice ?? v.minKmPrice ?? 0,
-              afterKmPrice: matched.afterKmPrice ?? v.afterKmPrice ?? 0,
-              extraCharge: matched.extraCharge ?? v.extraCharge ?? 0,
-              commissionRate: matched.commissionRate ?? v.commissionRate ?? 10,
+              minKmDistance: Number(matched.minKmDistance ?? v.minKmDistance ?? 1.5),
+              minKmPrice: Number(matched.minKmPrice ?? v.minKmPrice ?? 35),
+              afterKmPrice: Number(matched.afterKmPrice ?? v.afterKmPrice ?? 12),
+              extraCharge: Number(matched.extraCharge ?? v.extraCharge ?? 5),
+              commissionRate: Number(matched.commissionRate ?? v.commissionRate ?? 10),
               commissionType: matched.commissionType || v.commissionType || '%',
-              waitingChargePerMinute: matched.waitingChargePerMinute ?? v.waitingChargePerMinute ?? 2,
-              freeWaitingMinutes: matched.freeWaitingMinutes ?? v.freeWaitingMinutes ?? 5,
+              biddingEnabled: matched.biddingEnabled !== undefined ? Boolean(matched.biddingEnabled) : Boolean(v.biddingEnabled),
+              minFare: Number(matched.minFare ?? v.minFare ?? 30),
+              maxFare: Number(matched.maxFare ?? v.maxFare ?? 5000),
+              captainAcceptSeconds: Number(matched.captainAcceptSeconds ?? v.captainAcceptSeconds ?? 15),
+              searchTimeoutSeconds: Number(matched.searchTimeoutSeconds ?? v.searchTimeoutSeconds ?? 90),
+              freeWaitingMinutes: Number(matched.freeWaitingMinutes ?? v.freeWaitingMinutes ?? 5),
+              waitingChargePerMinute: Number(matched.waitingChargePerMinute ?? v.waitingChargePerMinute ?? 2),
+              weatherBad: matched.weatherBad !== undefined ? Boolean(matched.weatherBad) : Boolean(v.weatherBad),
+              weatherSurgeType: matched.weatherSurgeType || v.weatherSurgeType || 'flat',
+              weatherSurgeValue: Number(matched.weatherSurgeValue ?? v.weatherSurgeValue ?? 15),
               isEnabled: matched.isEnabled !== false,
               isModified: true,
             };
@@ -109,14 +124,22 @@ export function AddZonePage() {
             vehicleCustomId: v.customId || '',
             vehicleName: v.name,
             vehicleImage: v.image || '',
-            minKmDistance: v.minKmDistance ?? 0,
-            minKmPrice: v.minKmPrice ?? 0,
-            afterKmPrice: v.afterKmPrice ?? 0,
-            extraCharge: v.extraCharge ?? 0,
-            commissionRate: v.commissionRate ?? 10,
+            minKmDistance: Number(v.minKmDistance ?? 1.5),
+            minKmPrice: Number(v.minKmPrice ?? 35),
+            afterKmPrice: Number(v.afterKmPrice ?? 12),
+            extraCharge: Number(v.extraCharge ?? 5),
+            commissionRate: Number(v.commissionRate ?? 10),
             commissionType: v.commissionType || '%',
-            waitingChargePerMinute: v.waitingChargePerMinute ?? 2,
-            freeWaitingMinutes: v.freeWaitingMinutes ?? 5,
+            biddingEnabled: Boolean(v.biddingEnabled),
+            minFare: Number(v.minFare ?? 30),
+            maxFare: Number(v.maxFare ?? 5000),
+            captainAcceptSeconds: Number(v.captainAcceptSeconds ?? 15),
+            searchTimeoutSeconds: Number(v.searchTimeoutSeconds ?? 90),
+            freeWaitingMinutes: Number(v.freeWaitingMinutes ?? 5),
+            waitingChargePerMinute: Number(v.waitingChargePerMinute ?? 2),
+            weatherBad: Boolean(v.weatherBad),
+            weatherSurgeType: v.weatherSurgeType || 'flat',
+            weatherSurgeValue: Number(v.weatherSurgeValue ?? 15),
             isEnabled: true,
             isModified: false,
           };
@@ -134,14 +157,22 @@ export function AddZonePage() {
         vehicleCustomId: v.customId || '',
         vehicleName: v.name,
         vehicleImage: v.image || '',
-        minKmDistance: v.minKmDistance ?? 0,
-        minKmPrice: v.minKmPrice ?? 0,
-        afterKmPrice: v.afterKmPrice ?? 0,
-        extraCharge: v.extraCharge ?? 0,
-        commissionRate: v.commissionRate ?? 10,
+        minKmDistance: Number(v.minKmDistance ?? 1.5),
+        minKmPrice: Number(v.minKmPrice ?? 35),
+        afterKmPrice: Number(v.afterKmPrice ?? 12),
+        extraCharge: Number(v.extraCharge ?? 5),
+        commissionRate: Number(v.commissionRate ?? 10),
         commissionType: v.commissionType || '%',
-        waitingChargePerMinute: v.waitingChargePerMinute ?? 2,
-        freeWaitingMinutes: v.freeWaitingMinutes ?? 5,
+        biddingEnabled: Boolean(v.biddingEnabled),
+        minFare: Number(v.minFare ?? 30),
+        maxFare: Number(v.maxFare ?? 5000),
+        captainAcceptSeconds: Number(v.captainAcceptSeconds ?? 15),
+        searchTimeoutSeconds: Number(v.searchTimeoutSeconds ?? 90),
+        freeWaitingMinutes: Number(v.freeWaitingMinutes ?? 5),
+        waitingChargePerMinute: Number(v.waitingChargePerMinute ?? 2),
+        weatherBad: Boolean(v.weatherBad),
+        weatherSurgeType: v.weatherSurgeType || 'flat',
+        weatherSurgeValue: Number(v.weatherSurgeValue ?? 15),
         isEnabled: true,
         isModified: false,
       }));
@@ -334,14 +365,22 @@ export function AddZonePage() {
         if (item.vehicleId === vehicleId) {
           return {
             ...item,
-            minKmDistance: defaultVehicle.minKmDistance ?? 0,
-            minKmPrice: defaultVehicle.minKmPrice ?? 0,
-            afterKmPrice: defaultVehicle.afterKmPrice ?? 0,
-            extraCharge: defaultVehicle.extraCharge ?? 0,
-            commissionRate: defaultVehicle.commissionRate ?? 10,
+            minKmDistance: Number(defaultVehicle.minKmDistance ?? 1.5),
+            minKmPrice: Number(defaultVehicle.minKmPrice ?? 35),
+            afterKmPrice: Number(defaultVehicle.afterKmPrice ?? 12),
+            extraCharge: Number(defaultVehicle.extraCharge ?? 5),
+            commissionRate: Number(defaultVehicle.commissionRate ?? 10),
             commissionType: defaultVehicle.commissionType || '%',
-            waitingChargePerMinute: defaultVehicle.waitingChargePerMinute ?? 2,
-            freeWaitingMinutes: defaultVehicle.freeWaitingMinutes ?? 5,
+            biddingEnabled: Boolean(defaultVehicle.biddingEnabled),
+            minFare: Number(defaultVehicle.minFare ?? 30),
+            maxFare: Number(defaultVehicle.maxFare ?? 5000),
+            captainAcceptSeconds: Number(defaultVehicle.captainAcceptSeconds ?? 15),
+            searchTimeoutSeconds: Number(defaultVehicle.searchTimeoutSeconds ?? 90),
+            freeWaitingMinutes: Number(defaultVehicle.freeWaitingMinutes ?? 5),
+            waitingChargePerMinute: Number(defaultVehicle.waitingChargePerMinute ?? 2),
+            weatherBad: Boolean(defaultVehicle.weatherBad),
+            weatherSurgeType: defaultVehicle.weatherSurgeType || 'flat',
+            weatherSurgeValue: Number(defaultVehicle.weatherSurgeValue ?? 15),
             isEnabled: true,
             isModified: false,
           };
@@ -352,7 +391,7 @@ export function AddZonePage() {
 
     toast({
       title: 'Reset to Vehicle Default',
-      description: `Prices for ${defaultVehicle.name} have been restored to default vehicle catalog rates.`,
+      description: `All settings for ${defaultVehicle.name} (pricing, commission, negotiations & surge) have been restored to default catalog values.`,
     });
   };
 
@@ -363,21 +402,29 @@ export function AddZonePage() {
         vehicleCustomId: v.customId || '',
         vehicleName: v.name,
         vehicleImage: v.image || '',
-        minKmDistance: v.minKmDistance ?? 0,
-        minKmPrice: v.minKmPrice ?? 0,
-        afterKmPrice: v.afterKmPrice ?? 0,
-        extraCharge: v.extraCharge ?? 0,
-        commissionRate: v.commissionRate ?? 10,
+        minKmDistance: Number(v.minKmDistance ?? 1.5),
+        minKmPrice: Number(v.minKmPrice ?? 35),
+        afterKmPrice: Number(v.afterKmPrice ?? 12),
+        extraCharge: Number(v.extraCharge ?? 5),
+        commissionRate: Number(v.commissionRate ?? 10),
         commissionType: v.commissionType || '%',
-        waitingChargePerMinute: v.waitingChargePerMinute ?? 2,
-        freeWaitingMinutes: v.freeWaitingMinutes ?? 5,
+        biddingEnabled: Boolean(v.biddingEnabled),
+        minFare: Number(v.minFare ?? 30),
+        maxFare: Number(v.maxFare ?? 5000),
+        captainAcceptSeconds: Number(v.captainAcceptSeconds ?? 15),
+        searchTimeoutSeconds: Number(v.searchTimeoutSeconds ?? 90),
+        freeWaitingMinutes: Number(v.freeWaitingMinutes ?? 5),
+        waitingChargePerMinute: Number(v.waitingChargePerMinute ?? 2),
+        weatherBad: Boolean(v.weatherBad),
+        weatherSurgeType: v.weatherSurgeType || 'flat',
+        weatherSurgeValue: Number(v.weatherSurgeValue ?? 15),
         isEnabled: true,
         isModified: false,
       }))
     );
     toast({
       title: 'All Rates Reset',
-      description: 'All vehicle pricing rules have been reset to global vehicle catalog defaults.',
+      description: 'All vehicle pricing rules, commission, negotiations and timers have been reset to global defaults.',
     });
   };
 
@@ -391,6 +438,23 @@ export function AddZonePage() {
       fare += (distanceKm - baseKm) * perKm;
     }
     fare += extra;
+
+    if (p.weatherBad) {
+      const surgeVal = Number(p.weatherSurgeValue) || 0;
+      if (p.weatherSurgeType === 'multiplier') {
+        fare *= surgeVal > 0 ? surgeVal : 1;
+      } else {
+        fare += surgeVal;
+      }
+    }
+
+    if (Number.isFinite(Number(p.minFare)) && Number(p.minFare) > 0) {
+      fare = Math.max(fare, Number(p.minFare));
+    }
+    if (Number.isFinite(Number(p.maxFare)) && Number(p.maxFare) >= 1000) {
+      fare = Math.min(fare, Number(p.maxFare));
+    }
+
     return Math.round(fare);
   };
 
@@ -437,8 +501,16 @@ export function AddZonePage() {
         extraCharge: Number(p.extraCharge) || 0,
         commissionRate: Number(p.commissionRate) || 10,
         commissionType: p.commissionType || '%',
-        waitingChargePerMinute: Number(p.waitingChargePerMinute) || 2,
+        biddingEnabled: Boolean(p.biddingEnabled),
+        minFare: Number(p.minFare) || 25,
+        maxFare: Number(p.maxFare) || 5000,
+        captainAcceptSeconds: Number(p.captainAcceptSeconds) || 15,
+        searchTimeoutSeconds: Number(p.searchTimeoutSeconds) || 90,
         freeWaitingMinutes: Number(p.freeWaitingMinutes) || 5,
+        waitingChargePerMinute: Number(p.waitingChargePerMinute) || 2,
+        weatherBad: Boolean(p.weatherBad),
+        weatherSurgeType: p.weatherSurgeType || 'flat',
+        weatherSurgeValue: Number(p.weatherSurgeValue) || 15,
         isEnabled: p.isEnabled !== false,
       })),
     };
@@ -721,11 +793,18 @@ export function AddZonePage() {
                 {vehiclePricings.map((pricing) => {
                   const defaultVeh = vehicles.find((v) => (v._id || v.id) === pricing.vehicleId);
                   const isModifiedFromDefault = defaultVeh && (
-                    Number(pricing.minKmDistance) !== Number(defaultVeh.minKmDistance ?? 0) ||
-                    Number(pricing.minKmPrice) !== Number(defaultVeh.minKmPrice ?? 0) ||
-                    Number(pricing.afterKmPrice) !== Number(defaultVeh.afterKmPrice ?? 0) ||
-                    Number(pricing.extraCharge) !== Number(defaultVeh.extraCharge ?? 0) ||
-                    Number(pricing.commissionRate) !== Number(defaultVeh.commissionRate ?? 10)
+                    Number(pricing.minKmDistance) !== Number(defaultVeh.minKmDistance ?? 1.5) ||
+                    Number(pricing.minKmPrice) !== Number(defaultVeh.minKmPrice ?? 35) ||
+                    Number(pricing.afterKmPrice) !== Number(defaultVeh.afterKmPrice ?? 12) ||
+                    Number(pricing.extraCharge) !== Number(defaultVeh.extraCharge ?? 5) ||
+                    Number(pricing.commissionRate) !== Number(defaultVeh.commissionRate ?? 10) ||
+                    pricing.commissionType !== (defaultVeh.commissionType || '%') ||
+                    Boolean(pricing.biddingEnabled) !== Boolean(defaultVeh.biddingEnabled) ||
+                    Number(pricing.minFare) !== Number(defaultVeh.minFare ?? 30) ||
+                    Number(pricing.maxFare) !== Number(defaultVeh.maxFare ?? 5000) ||
+                    Boolean(pricing.weatherBad) !== Boolean(defaultVeh.weatherBad) ||
+                    pricing.weatherSurgeType !== (defaultVeh.weatherSurgeType || 'flat') ||
+                    Number(pricing.weatherSurgeValue) !== Number(defaultVeh.weatherSurgeValue ?? 15)
                   );
 
                   const sample5KmFare = calculateSampleFare(pricing, 5.0);
@@ -762,7 +841,7 @@ export function AddZonePage() {
                             )}
                           </div>
                           <div>
-                            <div className="flex items-center gap-2">
+                            <div className="flex flex-wrap items-center gap-2">
                               <h4 className="font-semibold text-slate-900 dark:text-white text-sm">
                                 {pricing.vehicleName}
                               </h4>
@@ -775,9 +854,21 @@ export function AddZonePage() {
                                   Default Rate
                                 </Badge>
                               )}
+                              {pricing.biddingEnabled && (
+                                <Badge className="bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-300 text-[10px] font-medium py-0 px-1.5">
+                                  inDrive Bidding Active
+                                </Badge>
+                              )}
+                              {pricing.weatherBad && (
+                                <Badge className="bg-blue-500/10 text-blue-700 dark:text-blue-400 border border-blue-300 text-[10px] font-medium py-0 px-1.5 flex items-center gap-1">
+                                  <CloudRain className="h-2.5 w-2.5" />
+                                  Rain Surge
+                                </Badge>
+                              )}
                             </div>
                             <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
-                              ID: {pricing.vehicleCustomId || pricing.vehicleId} • Live simulation: 5 km = <span className="font-semibold text-emerald-600 dark:text-emerald-400">₹{sample5KmFare}</span> | 15 km = <span className="font-semibold text-emerald-600 dark:text-emerald-400">₹{sample15KmFare}</span>
+                              ID: {pricing.vehicleCustomId || pricing.vehicleId} • 5 km = <span className="font-semibold text-emerald-600 dark:text-emerald-400">₹{sample5KmFare}</span> | 15 km = <span className="font-semibold text-emerald-600 dark:text-emerald-400">₹{sample15KmFare}</span>
+                              {pricing.biddingEnabled ? ` • Floor: ₹${pricing.minFare} Ceiling: ₹${pricing.maxFare}` : ''}
                             </p>
                           </div>
                         </div>
@@ -808,98 +899,375 @@ export function AddZonePage() {
                         </div>
                       </div>
 
-                      {/* Inputs Grid */}
+                      {/* Vehicle Inputs & Controls when enabled */}
                       {pricing.isEnabled && (
-                        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 pt-3">
-                          {/* Base Distance (KM) */}
-                          <div className="space-y-1">
-                            <label className="text-[11px] font-medium text-slate-600 dark:text-slate-400 flex items-center justify-between">
-                              <span>Base Distance</span>
-                              <span className="text-[10px] text-slate-400 font-mono">KM</span>
-                            </label>
-                            <Input
-                              type="number"
-                              step="0.5"
-                              min="0"
-                              value={pricing.minKmDistance}
-                              onChange={(e) => handlePricingChange(pricing.vehicleId, 'minKmDistance', e.target.value)}
-                              className="h-8 text-xs bg-white dark:bg-slate-900"
-                              placeholder="0"
-                            />
-                            <p className="text-[10px] text-slate-400">Default: {defaultVeh?.minKmDistance ?? 0} km</p>
+                        <div className="pt-4 space-y-4">
+                          {/* 1. Distance & Core Fares */}
+                          <div>
+                            <p className="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5 mb-2.5">
+                              <DollarSign className="h-3.5 w-3.5 text-blue-600" />
+                              <span>Distance & Fare Calculation Matrix</span>
+                            </p>
+                            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                              {/* Base Distance (KM) */}
+                              <div className="space-y-1">
+                                <label className="text-[11px] font-medium text-slate-600 dark:text-slate-400 flex items-center justify-between">
+                                  <span>Min KM (Base)</span>
+                                  <span className="text-[10px] text-slate-400 font-mono">KM</span>
+                                </label>
+                                <Input
+                                  type="number"
+                                  step="0.1"
+                                  min="0"
+                                  value={pricing.minKmDistance}
+                                  onChange={(e) => handlePricingChange(pricing.vehicleId, 'minKmDistance', e.target.value)}
+                                  className="h-8 text-xs bg-white dark:bg-slate-900"
+                                  placeholder="1.5"
+                                />
+                                <p className="text-[10px] text-slate-400">Default: {defaultVeh?.minKmDistance ?? 1.5} km</p>
+                              </div>
+
+                              {/* Base Fare (₹) */}
+                              <div className="space-y-1">
+                                <label className="text-[11px] font-medium text-slate-600 dark:text-slate-400 flex items-center justify-between">
+                                  <span>Min KM Price</span>
+                                  <span className="text-[10px] text-slate-400 font-mono">₹</span>
+                                </label>
+                                <Input
+                                  type="number"
+                                  step="1"
+                                  min="0"
+                                  value={pricing.minKmPrice}
+                                  onChange={(e) => handlePricingChange(pricing.vehicleId, 'minKmPrice', e.target.value)}
+                                  className="h-8 text-xs bg-white dark:bg-slate-900 font-semibold text-slate-800 dark:text-slate-200"
+                                  placeholder="35"
+                                />
+                                <p className="text-[10px] text-slate-400">Default: ₹{defaultVeh?.minKmPrice ?? 35}</p>
+                              </div>
+
+                              {/* Per KM Rate (₹/KM) */}
+                              <div className="space-y-1">
+                                <label className="text-[11px] font-medium text-slate-600 dark:text-slate-400 flex items-center justify-between">
+                                  <span>After KM Price</span>
+                                  <span className="text-[10px] text-slate-400 font-mono">₹/km</span>
+                                </label>
+                                <Input
+                                  type="number"
+                                  step="0.5"
+                                  min="0"
+                                  value={pricing.afterKmPrice}
+                                  onChange={(e) => handlePricingChange(pricing.vehicleId, 'afterKmPrice', e.target.value)}
+                                  className="h-8 text-xs bg-white dark:bg-slate-900 font-semibold text-blue-600 dark:text-blue-400"
+                                  placeholder="12"
+                                />
+                                <p className="text-[10px] text-slate-400">Default: ₹{defaultVeh?.afterKmPrice ?? 12}/km</p>
+                              </div>
+
+                              {/* Extra / Booking Fee (₹) */}
+                              <div className="space-y-1">
+                                <label className="text-[11px] font-medium text-slate-600 dark:text-slate-400 flex items-center justify-between">
+                                  <span>Extra Charge</span>
+                                  <span className="text-[10px] text-slate-400 font-mono">₹</span>
+                                </label>
+                                <Input
+                                  type="number"
+                                  step="1"
+                                  min="0"
+                                  value={pricing.extraCharge}
+                                  onChange={(e) => handlePricingChange(pricing.vehicleId, 'extraCharge', e.target.value)}
+                                  className="h-8 text-xs bg-white dark:bg-slate-900"
+                                  placeholder="5"
+                                />
+                                <p className="text-[10px] text-slate-400">Default: ₹{defaultVeh?.extraCharge ?? 5}</p>
+                              </div>
+                            </div>
                           </div>
 
-                          {/* Base Fare (₹) */}
-                          <div className="space-y-1">
-                            <label className="text-[11px] font-medium text-slate-600 dark:text-slate-400 flex items-center justify-between">
-                              <span>Base Fare</span>
-                              <span className="text-[10px] text-slate-400 font-mono">₹</span>
+                          {/* 2. Commission Rate & FIX vs % Switch */}
+                          <div className="p-3 rounded-lg bg-slate-50 dark:bg-slate-900/60 border border-slate-200/80 dark:border-slate-800 space-y-2">
+                            <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 flex items-center justify-between">
+                              <span>Commission Rate & Type (Zone Level)</span>
+                              <span className="text-[11px] text-slate-500 font-normal">
+                                Default: {defaultVeh?.commissionRate ?? 10}{defaultVeh?.commissionType === 'FIX' ? ' ₹ (FIX)' : '%'}
+                              </span>
                             </label>
-                            <Input
-                              type="number"
-                              step="1"
-                              min="0"
-                              value={pricing.minKmPrice}
-                              onChange={(e) => handlePricingChange(pricing.vehicleId, 'minKmPrice', e.target.value)}
-                              className="h-8 text-xs bg-white dark:bg-slate-900 font-semibold text-slate-800 dark:text-slate-200"
-                              placeholder="0"
-                            />
-                            <p className="text-[10px] text-slate-400">Default: ₹{defaultVeh?.minKmPrice ?? 0}</p>
+
+                            <div className="flex items-center gap-3">
+                              <div className="relative flex-1">
+                                <Input
+                                  type="number"
+                                  min="0"
+                                  step="0.5"
+                                  value={pricing.commissionRate}
+                                  onChange={(e) => handlePricingChange(pricing.vehicleId, 'commissionRate', e.target.value)}
+                                  className="h-8 text-xs bg-white dark:bg-slate-950 font-semibold"
+                                  placeholder="10"
+                                />
+                              </div>
+
+                              {/* FIX vs % Toggle Switch */}
+                              <div className="flex items-center bg-white dark:bg-slate-950 p-0.5 rounded-lg border border-slate-200 dark:border-slate-700">
+                                <button
+                                  type="button"
+                                  onClick={() => handlePricingChange(pricing.vehicleId, 'commissionType', 'FIX')}
+                                  className={`px-3 py-1 text-xs font-bold rounded-md transition-colors ${
+                                    pricing.commissionType === 'FIX'
+                                      ? 'bg-blue-600 text-white shadow-xs'
+                                      : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
+                                  }`}
+                                >
+                                  FIX (₹)
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() => handlePricingChange(pricing.vehicleId, 'commissionType', '%')}
+                                  className={`px-3 py-1 text-xs font-bold rounded-md transition-colors ${
+                                    pricing.commissionType === '%'
+                                      ? 'bg-blue-600 text-white shadow-xs'
+                                      : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
+                                  }`}
+                                >
+                                  %
+                                </button>
+                              </div>
+                            </div>
+
+                            <p className="text-[11px] text-slate-500 dark:text-slate-400">
+                              {pricing.commissionType === '%'
+                                ? `Platform keeps ${pricing.commissionRate}% of each ride fare originating in this zone.`
+                                : `Platform charges flat ₹${pricing.commissionRate} per ride regardless of distance in this zone.`}
+                            </p>
                           </div>
 
-                          {/* Per KM Rate (₹/KM) */}
-                          <div className="space-y-1">
-                            <label className="text-[11px] font-medium text-slate-600 dark:text-slate-400 flex items-center justify-between">
-                              <span>Per KM Rate</span>
-                              <span className="text-[10px] text-slate-400 font-mono">₹/km</span>
-                            </label>
-                            <Input
-                              type="number"
-                              step="0.5"
-                              min="0"
-                              value={pricing.afterKmPrice}
-                              onChange={(e) => handlePricingChange(pricing.vehicleId, 'afterKmPrice', e.target.value)}
-                              className="h-8 text-xs bg-white dark:bg-slate-900 font-semibold text-blue-600 dark:text-blue-400"
-                              placeholder="0"
-                            />
-                            <p className="text-[10px] text-slate-400">Default: ₹{defaultVeh?.afterKmPrice ?? 0}/km</p>
+                          {/* 3. Negotiations & Bidding System (Set your preferred price) */}
+                          <div className="p-3 rounded-lg bg-slate-50 dark:bg-slate-900/60 border border-slate-200/80 dark:border-slate-800 space-y-3">
+                            <div className="flex items-center justify-between">
+                              <div>
+                                <div className="flex items-center gap-2">
+                                  <Sliders className="h-3.5 w-3.5 text-blue-600" />
+                                  <span className="text-xs font-bold text-slate-800 dark:text-slate-200">
+                                    Set your preferred price / Fare Negotiations
+                                  </span>
+                                  <Badge
+                                    variant="outline"
+                                    className={`text-[10px] py-0 px-1.5 ${
+                                      pricing.biddingEnabled
+                                        ? 'bg-emerald-50 text-emerald-700 border-emerald-300 dark:bg-emerald-950/40 dark:text-emerald-300'
+                                        : 'bg-slate-100 text-slate-500'
+                                    }`}
+                                  >
+                                    {pricing.biddingEnabled ? 'Active (Negotiation Allowed)' : 'Fixed Price'}
+                                  </Badge>
+                                </div>
+                                <p className="text-[11px] text-slate-500 mt-0.5">
+                                  Enable inDrive-style real-time fare negotiation between rider and driver within min/max bounds in this zone.
+                                </p>
+                              </div>
+
+                              <Switch
+                                checked={pricing.biddingEnabled}
+                                onCheckedChange={(val) => handlePricingChange(pricing.vehicleId, 'biddingEnabled', val)}
+                              />
+                            </div>
+
+                            {pricing.biddingEnabled && (
+                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 border-t border-slate-200 dark:border-slate-800 animate-slide-in">
+                                <div className="space-y-1">
+                                  <label className="text-[11px] font-medium text-slate-600 dark:text-slate-400 flex items-center justify-between">
+                                    <span>Minimum Fare (Floor Price)</span>
+                                    <span className="text-[10px] text-slate-400 font-mono">₹</span>
+                                  </label>
+                                  <Input
+                                    type="number"
+                                    min="0"
+                                    placeholder="30"
+                                    value={pricing.minFare}
+                                    onChange={(e) => handlePricingChange(pricing.vehicleId, 'minFare', e.target.value)}
+                                    className="h-8 text-xs bg-white dark:bg-slate-950"
+                                  />
+                                  <p className="text-[10px] text-slate-400">Protects drivers from unrealistically low rider bids</p>
+                                </div>
+
+                                <div className="space-y-1">
+                                  <label className="text-[11px] font-medium text-slate-600 dark:text-slate-400 flex items-center justify-between">
+                                    <span>Maximum Fare (Ceiling Price)</span>
+                                    <span className="text-[10px] text-slate-400 font-mono">₹</span>
+                                  </label>
+                                  <Input
+                                    type="number"
+                                    min="0"
+                                    placeholder="5000"
+                                    value={pricing.maxFare}
+                                    onChange={(e) => handlePricingChange(pricing.vehicleId, 'maxFare', e.target.value)}
+                                    className="h-8 text-xs bg-white dark:bg-slate-950"
+                                  />
+                                  <p className="text-[10px] text-slate-400">Prevents overpricing and regulatory price gouging</p>
+                                </div>
+                              </div>
+                            )}
                           </div>
 
-                          {/* Extra / Booking Fee (₹) */}
-                          <div className="space-y-1">
-                            <label className="text-[11px] font-medium text-slate-600 dark:text-slate-400 flex items-center justify-between">
-                              <span>Extra / Fee</span>
-                              <span className="text-[10px] text-slate-400 font-mono">₹</span>
-                            </label>
-                            <Input
-                              type="number"
-                              step="1"
-                              min="0"
-                              value={pricing.extraCharge}
-                              onChange={(e) => handlePricingChange(pricing.vehicleId, 'extraCharge', e.target.value)}
-                              className="h-8 text-xs bg-white dark:bg-slate-900"
-                              placeholder="0"
-                            />
-                            <p className="text-[10px] text-slate-400">Default: ₹{defaultVeh?.extraCharge ?? 0}</p>
+                          {/* 4. Captain Search & Waiting Charges */}
+                          <div className="p-3 rounded-lg bg-slate-50 dark:bg-slate-900/60 border border-slate-200/80 dark:border-slate-800 space-y-2">
+                            <p className="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
+                              <Clock className="h-3.5 w-3.5 text-blue-600" />
+                              <span>Captain Search & Waiting Charges</span>
+                            </p>
+                            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-1">
+                              <div className="space-y-1">
+                                <label className="text-[11px] font-medium text-slate-600 dark:text-slate-400 flex items-center justify-between">
+                                  <span>Captain Accept</span>
+                                  <span className="text-[10px] text-slate-400 font-mono">SEC</span>
+                                </label>
+                                <Input
+                                  type="number"
+                                  min="5"
+                                  max="120"
+                                  value={pricing.captainAcceptSeconds}
+                                  onChange={(e) => handlePricingChange(pricing.vehicleId, 'captainAcceptSeconds', e.target.value)}
+                                  className="h-8 text-xs bg-white dark:bg-slate-950"
+                                />
+                                <p className="text-[10px] text-slate-400">Accept window per driver</p>
+                              </div>
+
+                              <div className="space-y-1">
+                                <label className="text-[11px] font-medium text-slate-600 dark:text-slate-400 flex items-center justify-between">
+                                  <span>Search Timeout</span>
+                                  <span className="text-[10px] text-slate-400 font-mono">SEC</span>
+                                </label>
+                                <Input
+                                  type="number"
+                                  min="20"
+                                  max="300"
+                                  value={pricing.searchTimeoutSeconds}
+                                  onChange={(e) => handlePricingChange(pricing.vehicleId, 'searchTimeoutSeconds', e.target.value)}
+                                  className="h-8 text-xs bg-white dark:bg-slate-950"
+                                />
+                                <p className="text-[10px] text-slate-400">Stop search if unassigned</p>
+                              </div>
+
+                              <div className="space-y-1">
+                                <label className="text-[11px] font-medium text-slate-600 dark:text-slate-400 flex items-center justify-between">
+                                  <span>Free Waiting</span>
+                                  <span className="text-[10px] text-slate-400 font-mono">MIN</span>
+                                </label>
+                                <Input
+                                  type="number"
+                                  min="0"
+                                  max="30"
+                                  value={pricing.freeWaitingMinutes}
+                                  onChange={(e) => handlePricingChange(pricing.vehicleId, 'freeWaitingMinutes', e.target.value)}
+                                  className="h-8 text-xs bg-white dark:bg-slate-950"
+                                />
+                                <p className="text-[10px] text-slate-400">Grace waiting window</p>
+                              </div>
+
+                              <div className="space-y-1">
+                                <label className="text-[11px] font-medium text-slate-600 dark:text-slate-400 flex items-center justify-between">
+                                  <span>Wait Charge</span>
+                                  <span className="text-[10px] text-slate-400 font-mono">₹/MIN</span>
+                                </label>
+                                <Input
+                                  type="number"
+                                  min="0"
+                                  step="0.5"
+                                  value={pricing.waitingChargePerMinute}
+                                  onChange={(e) => handlePricingChange(pricing.vehicleId, 'waitingChargePerMinute', e.target.value)}
+                                  className="h-8 text-xs bg-white dark:bg-slate-950"
+                                />
+                                <p className="text-[10px] text-slate-400">Charged after free wait</p>
+                              </div>
+                            </div>
                           </div>
 
-                          {/* Commission Rate (%) */}
-                          <div className="space-y-1 col-span-2 sm:col-span-1">
-                            <label className="text-[11px] font-medium text-slate-600 dark:text-slate-400 flex items-center justify-between">
-                              <span>Commission</span>
-                              <span className="text-[10px] text-slate-400 font-mono">%</span>
-                            </label>
-                            <Input
-                              type="number"
-                              step="1"
-                              min="0"
-                              max="100"
-                              value={pricing.commissionRate}
-                              onChange={(e) => handlePricingChange(pricing.vehicleId, 'commissionRate', e.target.value)}
-                              className="h-8 text-xs bg-white dark:bg-slate-900"
-                              placeholder="10"
-                            />
-                            <p className="text-[10px] text-slate-400">Default: {defaultVeh?.commissionRate ?? 10}%</p>
+                          {/* 5. Bad Weather / Rain Surge Pricing */}
+                          <div className="p-3 rounded-lg bg-slate-50 dark:bg-slate-900/60 border border-slate-200/80 dark:border-slate-800 space-y-3">
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center gap-2">
+                                <div className="h-7 w-7 rounded-lg bg-blue-100 dark:bg-blue-950 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0">
+                                  <CloudRain className="h-4 w-4" />
+                                </div>
+                                <div>
+                                  <div className="flex items-center gap-2">
+                                    <span className="text-xs font-bold text-slate-800 dark:text-slate-200">
+                                      Bad Weather / Rain Surge Pricing
+                                    </span>
+                                    <Badge
+                                      variant="outline"
+                                      className={`text-[10px] py-0 px-1.5 ${
+                                        pricing.weatherBad
+                                          ? 'bg-blue-50 text-blue-700 border-blue-300 dark:bg-blue-950/40 dark:text-blue-300'
+                                          : 'bg-slate-100 text-slate-500'
+                                      }`}
+                                    >
+                                      {pricing.weatherBad ? 'Surge Active' : 'Standard Rate'}
+                                    </Badge>
+                                  </div>
+                                  <p className="text-[11px] text-slate-500 mt-0.5">
+                                    Compensates drivers during rain & bad weather in this zone to prevent driver cancellations.
+                                  </p>
+                                </div>
+                              </div>
+
+                              <Switch
+                                checked={pricing.weatherBad}
+                                onCheckedChange={(val) => handlePricingChange(pricing.vehicleId, 'weatherBad', val)}
+                              />
+                            </div>
+
+                            {pricing.weatherBad && (
+                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 border-t border-slate-200 dark:border-slate-800 animate-slide-in">
+                                <div>
+                                  <label className="block text-[11px] font-medium text-slate-600 dark:text-slate-400 mb-1">
+                                    Rain Surge Model
+                                  </label>
+                                  <div className="grid grid-cols-2 gap-2">
+                                    <button
+                                      type="button"
+                                      onClick={() => handlePricingChange(pricing.vehicleId, 'weatherSurgeType', 'flat')}
+                                      className={`px-2.5 py-1.5 text-xs font-semibold rounded-md border transition-all text-center ${
+                                        pricing.weatherSurgeType === 'flat'
+                                          ? 'bg-blue-600 text-white border-blue-600 shadow-xs'
+                                          : 'bg-white dark:bg-slate-950 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300'
+                                      }`}
+                                    >
+                                      Flat Fee (+₹ FIX)
+                                    </button>
+                                    <button
+                                      type="button"
+                                      onClick={() => handlePricingChange(pricing.vehicleId, 'weatherSurgeType', 'multiplier')}
+                                      className={`px-2.5 py-1.5 text-xs font-semibold rounded-md border transition-all text-center ${
+                                        pricing.weatherSurgeType === 'multiplier'
+                                          ? 'bg-blue-600 text-white border-blue-600 shadow-xs'
+                                          : 'bg-white dark:bg-slate-950 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300'
+                                      }`}
+                                    >
+                                      Multiplier (x MULT)
+                                    </button>
+                                  </div>
+                                </div>
+
+                                <div className="space-y-1">
+                                  <label className="text-[11px] font-medium text-slate-600 dark:text-slate-400 flex items-center justify-between">
+                                    <span>
+                                      {pricing.weatherSurgeType === 'flat' ? 'Rain Allowance (+₹)' : 'Surge Multiplier (x)'}
+                                    </span>
+                                    <span className="text-[10px] text-slate-400 font-mono">
+                                      {pricing.weatherSurgeType === 'flat' ? '₹' : 'x'}
+                                    </span>
+                                  </label>
+                                  <Input
+                                    type="number"
+                                    step={pricing.weatherSurgeType === 'multiplier' ? '0.05' : '1'}
+                                    min="0"
+                                    value={pricing.weatherSurgeValue}
+                                    onChange={(e) => handlePricingChange(pricing.vehicleId, 'weatherSurgeValue', e.target.value)}
+                                    className="h-8 text-xs bg-white dark:bg-slate-950"
+                                    placeholder={pricing.weatherSurgeType === 'multiplier' ? '1.25' : '15'}
+                                  />
+                                </div>
+                              </div>
+                            )}
                           </div>
                         </div>
                       )}
