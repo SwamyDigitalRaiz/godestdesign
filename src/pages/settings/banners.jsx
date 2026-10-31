@@ -94,7 +94,10 @@ export function BannersTab() {
           (b.subtitle && b.subtitle.toLowerCase().includes(searchQuery.toLowerCase()));
 
         const matchesAudience =
-          audienceFilter === 'all' || (b.targetAudience || 'all') === audienceFilter;
+          audienceFilter === 'all' ||
+          (audienceFilter === 'user' && (b.targetAudience === 'user' || b.targetAudience === 'riders' || b.targetAudience === 'all' || b.targetAudience === 'both')) ||
+          (audienceFilter === 'driver' && (b.targetAudience === 'driver' || b.targetAudience === 'drivers' || b.targetAudience === 'all' || b.targetAudience === 'both')) ||
+          (b.targetAudience || 'all') === audienceFilter;
 
         return matchesQuery && matchesAudience;
       })
@@ -305,22 +308,27 @@ export function BannersTab() {
 
   const getAudienceBadge = (audience) => {
     switch (audience) {
+      case 'user':
       case 'riders':
         return (
-          <Badge className="bg-blue-50 text-blue-600 border-blue-200 dark:bg-blue-950/40 dark:text-blue-400">
-            Riders Only
+          <Badge className="bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950/40 dark:text-blue-300 font-semibold gap-1">
+            <Smartphone className="h-3 w-3" />
+            User App
           </Badge>
         );
+      case 'driver':
       case 'drivers':
         return (
-          <Badge className="bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950/40 dark:text-amber-400">
-            Drivers Only
+          <Badge className="bg-amber-50 text-amber-800 border-amber-200 dark:bg-amber-950/40 dark:text-amber-300 font-semibold gap-1">
+            <Car className="h-3 w-3" />
+            Driver App
           </Badge>
         );
       default:
         return (
-          <Badge className="bg-slate-100 text-slate-700 border-slate-200 dark:bg-slate-800 dark:text-slate-300">
-            All Users
+          <Badge className="bg-purple-50 text-purple-700 border-purple-200 dark:bg-purple-950/40 dark:text-purple-300 font-semibold gap-1">
+            <Sparkles className="h-3 w-3" />
+            Both Apps
           </Badge>
         );
     }
@@ -486,9 +494,9 @@ export function BannersTab() {
             onChange={(e) => setAudienceFilter(e.target.value)}
             className="text-sm px-3 py-2 rounded-md border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200"
           >
-            <option value="all">All Audiences</option>
-            <option value="riders">Passengers / Riders Only</option>
-            <option value="drivers">Driver Partners Only</option>
+            <option value="all">All Banners (User & Driver)</option>
+            <option value="user">User App Banners (Passengers)</option>
+            <option value="driver">Driver App Banners (Captains)</option>
           </select>
           <Button variant="outline" size="sm" onClick={() => { setSearchQuery(''); setAudienceFilter('all'); }}>
             Reset Filters
@@ -719,16 +727,16 @@ export function BannersTab() {
             {/* Target Audience & Priority */}
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1.5">
-                <Label htmlFor="banner-audience">Target Audience</Label>
+                <Label htmlFor="banner-audience">Target App / Audience</Label>
                 <select
                   id="banner-audience"
                   value={formData.targetAudience}
                   onChange={(e) => setFormData({ ...formData, targetAudience: e.target.value })}
                   className="w-full text-sm px-3 py-2 rounded-md border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200"
                 >
-                  <option value="all">All Users</option>
-                  <option value="riders">Passengers / Riders Only</option>
-                  <option value="drivers">Driver Partners Only</option>
+                  <option value="user">User App (Passengers / Riders)</option>
+                  <option value="driver">Driver App (Captains / Drivers)</option>
+                  <option value="all">Both Apps (All Users & Drivers)</option>
                 </select>
               </div>
 
